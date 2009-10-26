@@ -1,0 +1,9 @@
+.DS_Store
+logs
+project/boot
+project/build/target
+lib_managed
+target
+*.log
+S3Memcached.config
+s3q.config
