@@ -30,6 +30,10 @@ object BertSpec extends Specification {
       Bert.encode(new java.util.Date(1234567890000L)).toList must_== Array(-125, 104, 5, 100, 0, 4, 98, 101, 114, 116, 100, 0, 4, 116, 105, 109, 101, 98, 0, 0, 4, -46, 98, 0, 8, -86, 82, 97, 0).map(_.toByte).toList
     }
 
+    "encodes regexen" in {
+
+    }
+
     "encodes" in {
       Bert.encode(scala).toList must_== bert.toList
     }
@@ -37,7 +41,20 @@ object BertSpec extends Specification {
 
   "with Scala objects" should {
     "decodes" in {
-      // Bert.decode(bert) must_== scala
+      Bert.decode(bert) must_== scala
+    }
+
+    "decodes strings" in {
+      val bert = Array(-125, 109, 0, 0, 0, 5, 104, 101, 108, 108, 111).map(_.toByte)
+      Bert.decode(bert) match {
+        case a:Array[Byte] => new String(a) must_== "hello"
+      }
+    }
+  }
+
+  "roundtrip" should {
+    "work" in {
+      Bert.decode(Bert.encode(List(1,2,3))) must_== List(1,2,3)
     }
   }
 

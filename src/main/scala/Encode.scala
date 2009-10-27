@@ -2,38 +2,10 @@ package org.bert
 
 import java.io.{OutputStream, DataOutputStream, ByteArrayOutputStream}
 
-case class BertTuple(val contents: Any*) {
-}
-
-object Bert {
-  def encode(value: Any):Array[Byte] = {
-    val out = new ByteArrayOutputStream
-    new Encoder(out).encode(value)
-
-    out.flush
-    out.toByteArray
-  }
-
-}
 
 class Encoder(outInner: OutputStream) {
-  val SMALL_INT = 97
-  val INT = 98
-  val SMALL_BIGNUM = 110
-  val LARGE_BIGNUM = 111
-  val FLOAT = 99
-  val ATOM = 100
-  val SMALL_TUPLE = 104
-  val LARGE_TUPLE = 105
-  val NIL = 106
-  val STRING = 107
-  val LIST = 108
-  val BIN = 109
-  val FUN = 117
-  val NEW_FUN = 112
-  val MAGIC = 131
-  val MAX_INT = (1 << 27) -1
-  val MIN_INT = -(1 << 27)
+
+  import Constants._
 
   val out = new DataOutputStream(outInner)
 
@@ -60,10 +32,10 @@ class Encoder(outInner: OutputStream) {
       case other => println("couldn't do: " + other)
     }
   }
-  
-  
+
+
   import java.util.regex.Pattern
-  
+
   def encodeFloat(f: Float) = {
     encodeDouble(f.toDouble)
   }
