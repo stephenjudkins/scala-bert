@@ -2,7 +2,6 @@ package org.bert
 
 import java.io.{OutputStream, DataOutputStream, ByteArrayOutputStream}
 
-
 class Encoder(outInner: OutputStream) {
 
   import Constants._
@@ -27,20 +26,22 @@ class Encoder(outInner: OutputStream) {
       case b:Boolean => encodeBoolean(b)
       case b:Array[Byte] => encodeBinary(b)
       case seq:Seq[Any] => encodeSeq(seq)
-/*      case r:scala.util.matching.Regex => encodeRegex(r)*/
+      case r:scala.util.matching.Regex => encodeRegex(r)
       case null => encodeNull
-      case other => println("couldn't do: " + other)
+/*      case other => println("couldn't do: " + other)*/
     }
   }
 
 
   import java.util.regex.Pattern
+  def encodeRegex(r: scala.util.matching.Regex) = {
+    encodeTuple(BertTuple('bert, 'regex, r.toString.getBytes, List()))
+  }
 
   def encodeFloat(f: Float) = {
     encodeDouble(f.toDouble)
   }
 
-  val FLOAT_LENGTH = 31
   def encodeDouble(d: Double) = {
     val bytes = String.format("%15.15e", new java.lang.Double(d)).getBytes
     val padded = bytes ++ Stream.const(0.toByte).take(FLOAT_LENGTH - bytes.length)

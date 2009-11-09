@@ -5,6 +5,7 @@ import java.io.{OutputStream, DataOutputStream, ByteArrayOutputStream, ByteArray
 import scala.io.Source
 
 case class BertTuple(val contents: Any*) {
+  override def toString = "BertTuple(" + contents.mkString(", ") + ")"
 }
 
 object Bert {
@@ -44,4 +45,6 @@ object Constants {
   val MAGIC = 131.toByte
   val MAX_INT = (1 << 27) -1.toByte
   val MIN_INT = -(1 << 27).toByte
+
+  val FLOAT_LENGTH = 31
 }
