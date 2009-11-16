@@ -130,6 +130,12 @@ object BertSpec extends Specification {
         case t:BertTuple => t must_== BertTuple(List(1), 'foo)
       }
     }
+
+    "decode an atom" in {
+      Bert.decode(binary(-125, 100, 0, 3, 102, 111, 111)) match {
+        case s:Symbol => s must_== 'foo
+      }
+    }
   }
 
   "encoding and decoding" should {

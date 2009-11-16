@@ -18,7 +18,7 @@ object Bert {
   }
 
   def decode(input: InputStream):Any = {
-    new Decoder(input).decode
+    BertParser.parse(input)
   }
 
   def decode(input: Array[Byte]):Any = {
