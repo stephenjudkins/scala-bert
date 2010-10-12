@@ -44,7 +44,7 @@ class Encoder(outInner: OutputStream) {
 
   def encodeDouble(d: Double) = {
     val bytes = String.format("%15.15e", new java.lang.Double(d)).getBytes
-    val padded = bytes ++ Stream.const(0.toByte).take(FLOAT_LENGTH - bytes.length)
+    val padded = bytes ++ Stream.continually(0.toByte).take(FLOAT_LENGTH - bytes.length)
     out.writeByte(FLOAT)
     out.write(padded, 0, FLOAT_LENGTH)
   }

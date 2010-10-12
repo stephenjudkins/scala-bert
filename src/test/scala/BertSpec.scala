@@ -1,11 +1,11 @@
-package org.bert
+package org.bert.spec
 
 import org.specs._
 import org.specs.matcher.Matcher
 
 import org.bert._
 
-object BertSpec extends Specification {
+class BertSpec extends Specification {
 
   def binary(bytes: Int*) = bytes.map(_.toByte).toArray
 
@@ -43,6 +43,14 @@ object BertSpec extends Specification {
       Bert.encode("""(foo|spam)|(bar|eggs)""".r) must beBinary(-125, 104, 4, 100, 0, 4, 98, 101, 114, 116, 100, 0, 5, 114, 101, 103, 101, 120, 109, 0, 0, 0, 21, 40, 102, 111, 111, 124, 115, 112, 97, 109, 41, 124, 40, 98, 97, 114, 124, 101, 103, 103, 115, 41, 106)
     }
 
+    "encodes integers < 128" in {
+      Bert.encode(5) must beBinary(-125, 97, 5)
+    }
+
+    "encode integers >= 128" in {
+      Bert.encode(128) must beBinary(-125, 97, 128)
+    }
+
     "encodes" in {
       Bert.encode(scala) must beBinary(bert)
     }
@@ -76,6 +84,12 @@ object BertSpec extends Specification {
     "decodes small ints" in {
       Bert.decode(binary(-125, 97, 42)) match {
         case i: Int => i must_== 42
+      }
+    }
+
+    "decodes small ints >= 128" in {
+      Bert.decode(binary(-125, 97, 128)) match {
+        case i: Int => i must_== 128
       }
     }
 
@@ -141,6 +155,17 @@ object BertSpec extends Specification {
   "encoding and decoding" should {
     "work with floats" in {
       Bert.decode(Bert.encode(9.9)) must_== 9.9
+    }
+
+    "work with integers" in {
+      Bert.decode(Bert.encode(128)) must_== 128
+    }
+
+    "work with binary" in {
+      val binary = "?".getBytes("UTF-8")
+      Bert.decode(Bert.encode(binary)) match {
+        case actual:Array[Byte] => actual must beBinary(binary)
+      }
     }
 
   }

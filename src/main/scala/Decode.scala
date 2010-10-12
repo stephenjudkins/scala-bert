@@ -66,7 +66,7 @@ class Decoder(innerInput: InputStream) {
   }
 
   def readSmallInt = {
-    input.readByte.toInt
+    input.readUnsignedByte.toInt
   }
 
   def readAtom = {
@@ -76,7 +76,7 @@ class Decoder(innerInput: InputStream) {
 
   def readList = {
     val length = readInt
-    val list = Stream.const {() => extractAny}.map {_()}.take(length).toList
+    val list = Stream.continually {() => extractAny}.map {_()}.take(length).toList
     input.readByte match { case NIL => }
     list
   }
@@ -88,7 +88,7 @@ class Decoder(innerInput: InputStream) {
 
   def readSmallTuple:BertTuple = {
     val length = input.readByte.toInt
-    val values = Stream.const {() => extractAny}.map {_()}.take(length).toArray
+    val values = Stream.continually {() => extractAny}.map {_()}.take(length).toArray
     BertTuple(values: _*)
   }
 
